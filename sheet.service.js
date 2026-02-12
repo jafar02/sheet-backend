@@ -1,3 +1,4 @@
+console.log("NEW VERSION LOADED");
 const { google } = require("googleapis");  
 const { rowsToObjects } = require("./data.processor");
 
