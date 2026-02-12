@@ -9,9 +9,12 @@ const spreadsheetId = process.env.SPREADSHEET_ID || "1AN8DvIfCdLyykul3znbyVw7fzi
 const range = process.env.SHEET_RANGE || "Sheet1";
 
 const auth = new google.auth.GoogleAuth({
-  credentials: JSON.parse(process.env.GOOGLE_CREDENTIALS),
-  scopes: ["https://www.googleapis.com/auth/spreadsheets.readonly"]
+  credentials: process.env.GOOGLE_CREDENTIALS
+    ? JSON.parse(process.env.GOOGLE_CREDENTIALS)
+    : require("./service-account.json"),
+  scopes: ["https://www.googleapis.com/auth/spreadsheets.readonly"],
 });
+
 
 /* =========================
    READ SHEET FUNCTION
