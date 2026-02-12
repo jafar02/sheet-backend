@@ -37,13 +37,16 @@ app.use(express.json());
 /* ========================
    ROOT & HEALTH CHECK
 ======================== */
-
+  
 app.get("/", (req, res) => {
-  res.send("🚀 Sheet Analytics Backend is Running");
+  res.status(200).send("Backend is live");
 });
 
 app.get("/health", (req, res) => {
-  res.json({ status: "ok" });
+  res.status(200).json({
+    status: "ok",
+    timestamp: new Date().toISOString()
+  });
 });
 
 /* ========================
