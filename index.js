@@ -12,7 +12,7 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: "*", // 🔒 In production, replace with your frontend URL
+    origin: "*", // 🔒 In production replace with frontend URL
     methods: ["GET", "POST"],
   },
 });
@@ -38,12 +38,10 @@ app.use(express.json());
    ROOT & HEALTH CHECK
 ======================== */
 
-// Root route (prevents 404 confusion)
 app.get("/", (req, res) => {
   res.send("🚀 Sheet Analytics Backend is Running");
 });
 
-// Health check route
 app.get("/health", (req, res) => {
   res.json({ status: "ok" });
 });
@@ -91,14 +89,12 @@ async function refreshSheet() {
     await getData();
     console.log("📄 Sheet refreshed");
 
-    // 🔥 Notify frontend instantly
     io.emit("sheet-updated");
   } catch (err) {
     console.error("Sheet refresh error:", err.message);
   }
 }
 
-// Refresh every 60 seconds
 setInterval(refreshSheet, 60000);
 
 /* ========================
@@ -115,7 +111,7 @@ io.on("connection", (socket) => {
 
 const PORT = process.env.PORT || 3000;
 
-// 🔥 Load sheet immediately on startup
+// Load sheet once on startup
 getData()
   .then(() => {
     console.log("📄 Initial sheet load complete");
