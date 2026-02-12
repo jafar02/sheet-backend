@@ -37,10 +37,13 @@ async function readSheet() {
 
     const rows = response.data.values;
 
-    if (!rows || rows.length === 0) {
+    if (!rows || rows.length <= 1) {
       console.warn("⚠️ Sheet returned empty data");
-      return cachedData;
-    }
+
+      cachedData = [];   
+      return [];
+}
+
 
     cachedData = rowsToObjects(rows);
     lastUpdated = new Date();
