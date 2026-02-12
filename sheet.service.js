@@ -1,5 +1,4 @@
-console.log("NEW VERSION LOADED");
-const { google } = require("googleapis");  
+const { google } = require("googleapis");
 const { rowsToObjects } = require("./data.processor");
 
 let cachedData = [];
@@ -11,29 +10,20 @@ const spreadsheetId =
 
 const range = process.env.SHEET_RANGE || "Sheet1";
 
-/* =========================
-   AUTH CONFIG
-========================= */
-
-let auth;
+let credentials;
 
 if (process.env.GOOGLE_CREDENTIALS) {
   console.log("🔐 Using Railway credentials");
-  auth = new google.auth.GoogleAuth({
-    credentials: JSON.parse(process.env.GOOGLE_CREDENTIALS),
-    scopes: ["https://www.googleapis.com/auth/spreadsheets.readonly"],
-  });
+  credentials = JSON.parse(process.env.GOOGLE_CREDENTIALS);
 } else {
   console.log("🔐 Using local service-account.json");
-  auth = new google.auth.GoogleAuth({
-    keyFile: "service-account.json",
-    scopes: ["https://www.googleapis.com/auth/spreadsheets.readonly"],
-  });
+  credentials = require("./service-account.json");
 }
 
-/* =========================
-   READ SHEET
-========================= */
+const auth = new google.auth.GoogleAuth({
+  credentials,
+  scopes: ["https://www.googleapis.com/auth/spreadsheets.readonly"],
+});
 
 async function readSheet() {
   try {
@@ -67,22 +57,12 @@ async function readSheet() {
   }
 }
 
-/* =========================
-   GET DATA
-========================= */
-
 async function getData() {
   if (cachedData.length === 0) {
     await readSheet();
   }
   return cachedData;
 }
-
-/* =========================
-   AUTO REFRESH
-========================= */
-
-setInterval(readSheet, 60000);
 
 module.exports = {
   readSheet,
